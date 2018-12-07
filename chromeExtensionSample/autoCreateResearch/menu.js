@@ -1,21 +1,21 @@
 function save() {
-  var rankingLimit = document.getElementById('rankingLimit');
-  var waitTime = document.getElementById('waitTime');
-  var ssUrl = document.getElementById('ssUrl');
-  localStorage.clear();
-  localStorage.setItem('rankingLimit', rankingLimit.value );
-  localStorage.setItem('waitTime', waitTime.value );
-  localStorage.setItem('ssUrl', rankingLimit.value );
-
-
+  const rankingLimit = document.getElementById('rankingLimit');
+  const waitTime = document.getElementById('waitTime');
+  const ssUrl = document.getElementById('ssUrl');
+  const BG = chrome.extension.getBackgroundPage();
+  BG.saveConfig(rankingLimit.value, waitTime.value, ssUrl.value);
 }
 function setUp() {
-  var rankingLimit = document.getElementById('rankingLimit');
-  var waitTime = document.getElementById('waitTime');
-  var ssUrl = document.getElementById('ssUrl');
-
-  rankingLimit.value = localStorage.getItem('rankingLimit');
-  waitTime.value = localStorage.getItem('waitTime');
+  const BG = chrome.extension.getBackgroundPage();
+  if(BG.getConfig() == null){
+    BG.saveConfig(8000,5000,"https://www.google.co.jp/");
+  }
+  const config = BG.getConfig();
+  const rankingLimit = document.getElementById('rankingLimit');
+  const waitTime = document.getElementById('waitTime');
+  const ssUrl = document.getElementById('ssUrl');
+  rankingLimit.value = config;
+  waitTime.value = "";
   ssUrl.value = "aaaaa";
 }
 
@@ -24,11 +24,5 @@ window.onload = function(){
 }
 
 document.getElementById('saveButton').onclick = function(){
-  chrome.tabs.query({active:true}, function(tab) {
-    chrome.tabs.sendMessage(tab[0].id, {text:''}, function(response) {
-        url = tab[0].url;
-        $('#place').text(response.title + ' ' + url);
-     });
-});
   save();
 }

@@ -1,15 +1,18 @@
-
-(async() => {
+﻿(async() => {
     const href = location.href;
     const wait = ( /** @type {number} */ second) => new Promise((resolve) => setTimeout(() => resolve(), second * 1000))
     await wait(0.7);
-    console.log(localStorage.getItem('rankingLimit'));
     if(href === "https://qiita.com/organizations"){
         const div_header = /** @type {HTMLElement} */ (document.querySelector("[class='organizations_header']"));
         // 自動作成実行ボタン追加
         let bTag = document.createElement('button');
         // 押した時の処理
         bTag.onclick= function(){
+            //backgroundにリクエスト
+            chrome.runtime.sendMessage({},
+                function(response) {
+                    console.log(response);
+                });
             const div_organizations = /** @type {HTMLElement} */ (document.querySelector("[class='list-unstyled organizationsList']"));
             const li_organizations = div_organizations.getElementsByTagName('li');
              let index = 0;
@@ -77,7 +80,3 @@
         request.send(params);
     }
 })();
-chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
-    ret = $('title').text();
-    sendResponse( {title:ret} );
-});
