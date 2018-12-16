@@ -8,9 +8,6 @@ function save() {
 }
 function setUp() {
   const BG = chrome.extension.getBackgroundPage();
-  if(BG.getConfig() == null){
-    BG.saveConfig(8000,5000,"https://www.google.co.jp/");
-  }
   const config = BG.getConfig();
   const rankingLimit = document.getElementById('rankingLimit');
   const waitTime = document.getElementById('waitTime');

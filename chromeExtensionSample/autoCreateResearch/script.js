@@ -3,19 +3,13 @@
     const wait = ( /** @type {number} */ second) => new Promise((resolve) => setTimeout(() => resolve(), second * 1000))
     await wait(0.7);
     if(href === "https://qiita.com/organizations"){
-        const div_header = /** @type {HTMLElement} */ (document.querySelector("[class='organizations_header']"));
+        const div_header = /** @type {HTMLElement} */ (document.querySelector("[class='ol-ItemList_tab']"));
         // 自動作成実行ボタン追加
         let bTag = document.createElement('button');
         // 押した時の処理
         bTag.onclick= function(){
             //backgroundにリクエスト
-
-            chrome.runtime.sendMessage({},
-                function(response) {
-                    console.log(response.rankingLimit);
-                    console.log(response.waitTime);
-                    getHtmlData(response.waitTime);
-                });
+            getHtmlData(5000);
         };
         const submit = document.createTextNode("自動作成実行");
         bTag.appendChild(submit);

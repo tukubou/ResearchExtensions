@@ -3,7 +3,7 @@
 	"name": "Extension name",
 	"short_name": "Ext name",
 	"version": "0.0.0.1",
-	"description": "a sample program for Google Chrome",
+	"description": "auto create Research program for Google Chrome",
 	"icons": {
     	"16": "16.png",
     	"48": "48.png",
@@ -14,7 +14,7 @@
     },
 	"content_scripts": [
 	    {
-	        "matches": ["https://qiita.com/*"],
+	        "matches": ["https://www.amazon.co.jp/*"],
 	        "js": ["contentScript.js"]
 	    }
 	],

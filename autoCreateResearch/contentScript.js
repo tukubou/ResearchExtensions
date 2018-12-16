@@ -1,23 +1,5 @@
-// @ts-check
-// ==UserScript==
-// @name     Amazon自動操作
-// @version      1.0
-// @description Amazon自動操作
-// @author       anonymouse
-// @match        https://www.amazon.co.jp/*
-// @require      https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js
-// @grant        GM_xmlhttpRequest
-// ==/UserScript==
-
-/**
-@matchのページに遷移したら動作
-**/
 (async() => {
-    const rankingLimit = 8000; 　//　リサーチ管理表に追加するランキングの上限
-    const waitTime = 8000;　　　//　待ち時間　通信速度に依存
-    const gasWebApplicationUrl = "https://script.google.com/macros/s/AKfycbwfO3qjSZaU3A9Rf_vwmOyO6hnZEw4xIcq7tzr9yg/exec";　// 参照するスプレッドシートのwebアプリケーションURL
     const href = location.href;
-    await wait(0.7);
      if (href.includes("https://www.amazon.co.jp/s/")) {
          // 検索結果画面
         localStorage.clear();
@@ -28,9 +10,7 @@
             if(confirm("作成実行")) {
                 chrome.runtime.sendMessage({},
                 function(response) {
-                    console.log(response.rankingLimit);
-                    console.log(response.waitTime);
-                    getHtmlData(response.waitTime);
+                    getHtmlData(response.waitTime, bTag);
                 });
             };
         }
@@ -43,13 +23,11 @@
                 // ランキング読み込みのためwaitは長め
                 chrome.runtime.sendMessage({},
                     function(response) {
-                        await wait(response.waitTime);
-                        getSelerData(key,response.rankingLimit, response.ssUrl);
+                        window.setTimeout( function() { getSelerData(key,response.rankingLimit, response.ssUrl) }, response.waitTime);
                         localStorage.removeItem(key);
-                        await wait(1000);
-                        window.close();
-                        break;
+                        window.setTimeout( function() { window.close() } , 8000);
                 });
+                break;
             }
         }
     }
@@ -57,9 +35,8 @@
      商品リストページの情報取得
     @param : waitTime 1商品を読み込む毎の待ち時間
     **/
-    function getHtmlData(waitTime){
+    function getHtmlData(waitTime, bTag){
         let index = 0;
-        bTag.textContent = "リサーチ管理表作成中";
         const liResult = /** @type {HTMLElement} */ (document.querySelectorAll("li[id*='result_']"));
         const intervalId = setInterval(function() {
              bTag.textContent = "リサーチ管理表作成中    :    " + (index+1) + "件目";
@@ -143,18 +120,19 @@
     @param : gasUrl post先のURL
     **/
     function post(params, gasUrl) {
-        GM_xmlhttpRequest( {
-            method: "POST",
-            url: gasUrl,
-            data: params,
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            onload: function(response) {
+        var request = new XMLHttpRequest();
+        request.open('POST', gasUrl);
+        request.onreadystatechange = function () {
+            if (request.readyState != 4) {
+                // リクエスト中
+            } else if (request.status != 200) {
+                // 失敗
+            } else {
+                // 送信成功
+                // var result = request.responseText;
             }
-        });
-    }
-    function wait(ms) {
-        return new Promise(r => setTimeout(r, ms));
+        };
+        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        request.send(params);
     }
 })();
