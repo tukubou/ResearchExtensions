@@ -1,23 +1,34 @@
 chrome.runtime.onMessage.addListener(
 	//script.jsからのリクエストのリスナー
-    function(request, sender, sendResponse) {
-		sendResponse(getConfig());
-    });
+	(request, sender, sendResponse) => {
+		getConfig(config => {
+			sendResponse(config);
+		})
+		return true;
+	}
+);
 
-var saveConfig = function(ranking,wait,ssUrl){
+function saveConfig(ranking, wait, ssUrl) {
 	localStorage.setItem('rankingLimit', ranking);
 	localStorage.setItem('waitTime', wait);
 	localStorage.setItem('ssUrl', ssUrl);
 	return 'success';
 };
 
-var getConfig = function(){
-	const defaultSSUrl = "https://script.google.com/macros/s/AKfycbxO08pz9Fu0oUfiJS-GhNK6PeQNoHPpn5ni5H1cY4ZwCxTLaf8/exec";
-	const responseObj = {
-		rankingLimit : (!localStorage.getItem('rankingLimit')) ? 8000 : localStorage.getItem('rankingLimit'),
-		waitTime : (!localStorage.getItem('waitTime')) ? 5000 : localStorage.getItem('waitTime'),
-		ssUrl : (!localStorage.getItem('ssUrl')) ? defaultSSUrl : localStorage.getItem('ssUrl')
-	}
-
-	return responseObj;
+function getConfig(action) {
+	const file = 'defaultConfig.json';
+	const xhr = new XMLHttpRequest();
+	xhr.open('GET', chrome.extension.getURL(file), true);
+	xhr.onreadystatechange = () => {
+		if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+			config = JSON.parse(xhr.responseText);
+			const responseObj = {
+				rankingLimit: (!localStorage.getItem('rankingLimit')) ? config.rankingLimit : localStorage.getItem('rankingLimit'),
+				waitTime: (!localStorage.getItem('waitTime')) ? config.waitTime : localStorage.getItem('waitTime'),
+				ssUrl: (!localStorage.getItem('ssUrl')) ? config.ssUrl : localStorage.getItem('ssUrl')
+			}
+			action(responseObj);
+		}
+	};
+	xhr.send();
 };

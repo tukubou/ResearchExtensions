@@ -5,24 +5,30 @@
 	"version": "0.0.0.1",
 	"description": "auto create Research program for Google Chrome",
 	"icons": {
-    	"16": "16.png",
-    	"48": "48.png",
-    	"128": "128.png"
+		"16": "16.png",
+		"48": "48.png",
+		"128": "128.png"
 	},
 	"browser_action": {
-        "default_popup" : "menu.html"
-    },
+		"default_popup": "menu.html"
+	},
 	"content_scripts": [
-	    {
-	        "matches": ["https://www.amazon.co.jp/*"],
-	        "js": ["contentScript.js"]
-	    }
+		{
+			"matches": [
+				"https://www.amazon.co.jp/*"
+			],
+			"js": [
+				"contentScript.js"
+			]
+		}
 	],
 	"background": {
-   		"scripts": ["background.js"],
-    	"persistent": false
-  	},
+		"scripts": [
+			"background.js"
+		],
+		"persistent": false
+	},
 	"permissions": [
-    "tabs"
+		"tabs"
 	]
 }
