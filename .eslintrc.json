@@ -17,7 +17,8 @@
     "_": false,
     "$": true
   }, 
-  "extends": "google", // googleの設定を読み込む
+  "extends": "google",
+  "parser": "babel-eslint",
   "rules": {
     "require-jsdoc": "off",
     "valid-jsdoc": "off",
