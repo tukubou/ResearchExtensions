@@ -1,9 +1,7 @@
 chrome.runtime.onMessage.addListener(
     // script.jsからのリクエストのリスナー
     (request, sender, sendResponse) => {
-      getConfig((config) =>
-        sendResponse(config)
-      );
+      getConfig((config) => sendResponse(config));
       return true;
     }
 );
@@ -23,12 +21,18 @@ function getConfig(action) {
     if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
       config = JSON.parse(xhr.responseText);
       const responseObj = {
-        rankingLimit: (!localStorage.getItem('rankingLimit')) ? config.rankingLimit : localStorage.getItem('rankingLimit'),
-        waitTime: (!localStorage.getItem('waitTime')) ? config.waitTime : localStorage.getItem('waitTime'),
-        ssUrl: (!localStorage.getItem('ssUrl')) ? config.ssUrl : localStorage.getItem('ssUrl'),
+        rankingLimit: !localStorage.getItem('rankingLimit')
+          ? config.rankingLimit
+          : localStorage.getItem('rankingLimit'),
+        waitTime: !localStorage.getItem('waitTime')
+          ? config.waitTime
+          : localStorage.getItem('waitTime'),
+        ssUrl: !localStorage.getItem('ssUrl')
+          ? config.ssUrl
+          : localStorage.getItem('ssUrl'),
       };
       action(responseObj);
     }
   };
   xhr.send();
-};
+}

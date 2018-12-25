@@ -8,15 +8,14 @@ function save() {
 }
 function setUp() {
   const BG = chrome.extension.getBackgroundPage();
-  BG.getConfig(
-      (config) => {
-        const rankingLimit = document.getElementById('rankingLimit');
-        const waitTime = document.getElementById('waitTime');
-        const ssUrl = document.getElementById('ssUrl');
-        rankingLimit.value = config.rankingLimit;
-        waitTime.value = config.waitTime;
-        ssUrl.value = config.ssUrl;
-      });
+  BG.getConfig((config) => {
+    const rankingLimit = document.getElementById('rankingLimit');
+    const waitTime = document.getElementById('waitTime');
+    const ssUrl = document.getElementById('ssUrl');
+    rankingLimit.value = config.rankingLimit;
+    waitTime.value = config.waitTime;
+    ssUrl.value = config.ssUrl;
+  });
 }
 
 window.onload = () => {
